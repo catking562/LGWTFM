@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="LoadGrapywithTriangleforMinecraft:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LoadGrapywithTriangleforMinecraft_jar</output-path>
+    <root id="archive" name="LoadGrapywithTriangleforMinecraft.jar">
+      <element id="module-output" name="LoadGrapywithTriangleforMinecraft" />
+    </root>
+  </artifact>
+</component>

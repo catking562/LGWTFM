@@ -1,0 +1,11 @@
+name: LGWTFM
+version: Umm...
+api-version: 1.20
+main: taewookim.LGWTFM
+commands:
+  lgwtfm:
+    permission: lgwtfm.admin
+
+permissions:
+  lgwtfm.admin:
+    default: op

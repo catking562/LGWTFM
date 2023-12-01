@@ -15,9 +15,7 @@ import taewookim.entity.Circle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 public class LGCMD implements CommandExecutor, TabCompleter {
 
@@ -45,7 +43,7 @@ public class LGCMD implements CommandExecutor, TabCompleter {
         }
         int n = Integer.parseInt(string2);
         World w = ((CraftWorld)Bukkit.getWorld("world")).getHandle();
-        for(int i = -n;i<n;i++) {
+        for(int i = -250;i<250;i++) {
             if(i !=0 ) {
                 double AnX = LGWTFM.AnfX(i);
                 double AnY = LGWTFM.AnfY(i);
@@ -69,6 +67,14 @@ public class LGCMD implements CommandExecutor, TabCompleter {
                 }
             }
         }
+        Vector<Circle> removinglist = new Vector<>();
+        for(int i = n;i<LGWTFM.circlelist.size();i++) {
+            removinglist.add(LGWTFM.circlelist.get(i));
+        }
+        for(Circle cir : removinglist) {
+            cir.getBukkitEntity().remove();
+        }
+        LGWTFM.circlelist.removeAll(removinglist);
         LGWTFM.Up();
         sender.sendMessage("가져오기 완료");
     }
@@ -81,12 +87,24 @@ public class LGCMD implements CommandExecutor, TabCompleter {
         LGWTFM.isStart = false;
     }
 
-    public void visible(CommandSender sender, String string1) {
-
-    }
-
     public void speed(CommandSender sender, String string1) {
         LGWTFM.speed = Double.parseDouble(string1);
+    }
+
+    public void distance(CommandSender commandSender, String string1) {
+        LGWTFM.distance = Double.parseDouble(string1);
+    }
+
+    public void isfollowing(CommandSender commandSender, String string1) {
+        LGWTFM.isfollow = Boolean.parseBoolean(string1);
+    }
+
+    public void distancehelp(CommandSender commandSender) {
+        commandSender.sendMessage("/lgwtfm distance <value>");
+    }
+
+    public void isfollowinghelp(CommandSender commandSender) {
+        commandSender.sendMessage("/lgwtfm isfollowing <true/false>");
     }
 
     public void loadhelp(CommandSender sender) {
@@ -94,15 +112,11 @@ public class LGCMD implements CommandExecutor, TabCompleter {
     }
 
     public void starthelp(CommandSender sender) {
-        sender.sendMessage("/lgwtfm start <n>");
+        sender.sendMessage("/lgwtfm start");
     }
 
     public void stophelp(CommandSender sender) {
         sender.sendMessage("/lgwtfm stop");
-    }
-
-    public void visiblehelp(CommandSender sender) {
-        sender.sendMessage("/lgwtfm visible <type>");
     }
 
     public void speedhelp(CommandSender sender) {
@@ -117,8 +131,9 @@ public class LGCMD implements CommandExecutor, TabCompleter {
         loadhelp(sender);
         starthelp(sender);
         stophelp(sender);
-        visiblehelp(sender);
         speedhelp(sender);
+        distancehelp(sender);
+        isfollowinghelp(sender);
     }
 
     @Override
@@ -138,11 +153,14 @@ public class LGCMD implements CommandExecutor, TabCompleter {
                     case "stop":
                         stop(commandSender);
                         break;
-                    case "visible":
-                        visiblehelp(commandSender);
-                        break;
                     case "speed":
                         speedhelp(commandSender);
+                        break;
+                    case "isfollowing":
+                        isfollowinghelp(commandSender);
+                        break;
+                    case "distance":
+                        distancehelp(commandSender);
                         break;
                     default:
                         wt(commandSender);
@@ -160,11 +178,14 @@ public class LGCMD implements CommandExecutor, TabCompleter {
                     case "stop":
                         stop(commandSender);
                         break;
-                    case "visible":
-                        visible(commandSender, strings[1]);
-                        break;
                     case "speed":
                         speed(commandSender, strings[1]);
+                        break;
+                    case "isfollowing":
+                        isfollowing(commandSender, strings[1]);
+                        break;
+                    case "distance":
+                        distance(commandSender, strings[1]);
                         break;
                     default:
                         wt(commandSender);
@@ -182,11 +203,14 @@ public class LGCMD implements CommandExecutor, TabCompleter {
                     case "stop":
                         stop(commandSender);
                         break;
-                    case "visible":
-                        visible(commandSender, strings[1]);
-                        break;
                     case "speed":
                         speed(commandSender, strings[1]);
+                        break;
+                    case "isfollowing":
+                        isfollowing(commandSender, strings[1]);
+                        break;
+                    case "distance":
+                        distance(commandSender, strings[1]);
                         break;
                     default:
                         wt(commandSender);
@@ -199,6 +223,27 @@ public class LGCMD implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return null;
+        switch(strings.length) {
+            case 1:
+                return Arrays.asList("load", "start", "stop", "speed", "isfollowing", "distance");
+            case 2:
+                switch(strings[0]) {
+                    case "load":
+                        return Arrays.asList("<파일위치>");
+                    case "speed":
+                        return Arrays.asList("<숫자>");
+                    case "isfollowing":
+                        return Arrays.asList("<true/false>");
+                    case "distance":
+                        return Arrays.asList("<숫자>");
+                }
+                break;
+            case 3:
+                if(strings[0]=="load") {
+                    return Arrays.asList("<int>");
+                }
+                break;
+        }
+        return Arrays.asList();
     }
 }

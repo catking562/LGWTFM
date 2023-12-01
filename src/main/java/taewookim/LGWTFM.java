@@ -27,6 +27,8 @@ public class LGWTFM extends JavaPlugin {
     public static LGWTFM plugin;
     public static Vector<Flame> flames = new Vector<>();
     public static double beforetick = 0;
+    public static boolean isfollow = false;
+    public static double distance = 5;
 
     public static double AnfX(double n) {
         int mi = listx.size();
@@ -70,7 +72,7 @@ public class LGWTFM extends JavaPlugin {
 
     public static void Up() {
         double per = tick/maxtick;
-        Location loc = new Location(Bukkit.getWorld("world"),-5.5, 77.5, -11);
+        Location loc = new Location(Bukkit.getWorld("world"),-5.5, 77.5, -11.0D+0.0001D);
         for(Circle cir : circlelist) {
             double k = cir.n*per*2.0D*Math.PI;
             double dx = (cir.a*Math.sin(k) + cir.b*Math.cos(k));
@@ -86,6 +88,19 @@ public class LGWTFM extends JavaPlugin {
             flames.add(new Flame(loc, maxtick));
             beforetick=tick;
         }
+        if(isfollow) {
+            Location loc1 = loc.clone();
+            loc1.setZ(-11.0D+distance);
+            loc1.setY(loc1.getY()-1.75D);
+            loc1.setYaw(180);
+            loc1.setPitch(0);
+            Bukkit.getPlayer("taewookim562").teleport(loc1);
+        }else {
+            Location loc1 = new Location(Bukkit.getWorld("world"), -5.5, 75.75D, -11.0D+distance);
+            loc1.setYaw(180);
+            loc1.setPitch(0);
+            Bukkit.getPlayer("taewookim562").teleport(loc1);
+        }
     }
 
     public void Update() {
@@ -94,8 +109,8 @@ public class LGWTFM extends JavaPlugin {
             public void run() {
                 if(isStart) {
                     tick+=speed;
-                    if(tick>500) {
-                        tick-=500;
+                    if(tick>maxtick) {
+                        tick-=maxtick;
                     }
                     Up();
                     Vector<Flame> removing = new Vector<>();
